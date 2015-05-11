@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
+<title>Pusher Test</title>
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
@@ -8,11 +9,29 @@
 <body>
 
 <div class="row">
-    <label id="status">status</label>
     <textarea name="codeArea" rows="8" cols="40">This is code.</textarea>
     <button type="button" id="sendCode">Send</button>
-    <textarea name="debugUpdate" rows="8" cols="40">Return from the server.</textarea>
+    <textarea id="statusMessage" rows="8" cols="40">Return from the server.</textarea>
 </div>
+
+
+<script src="//js.pusher.com/2.2/pusher.min.js"></script>
+<script>
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
+
+    var pusher = new Pusher('fb391863deb66c13d8c4');
+    var channel = pusher.subscribe('test_channel');
+    channel.bind('my_event', function(data) {
+        var string1 = String($('textarea#statusMessage').val()).concat('\n');
+        var string2 = string1.concat(String(data.message));
+        $('textarea#statusMessage').html(string2);
+    });
+ </script>
 
 <script>
 
@@ -28,10 +47,10 @@ $(function(){
             //data: $('#contact-us-form').serialize(),
             data: { code: $('textarea#codeArea').val() },
             success: function(data){
-                $('label#status').html('Code received.');
+                //$('textarea#statusMessage').html('Code received.');
             },
             error: function(data){
-                $('label#status').html('Opps, something is wrong with the server. Please try again.');
+                $('textarea#statusMessage').html('Opps, something is wrong with the server. Please try again.');
             }
         });
     });
