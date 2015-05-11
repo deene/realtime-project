@@ -9,29 +9,31 @@
 <body>
 
 <div class="row">
-    <textarea name="codeArea" rows="8" cols="40">This is code.</textarea>
+    <textarea id="codeArea" rows="8" cols="40">This is code.</textarea>
     <button type="button" id="sendCode">Send</button>
     <textarea id="statusMessage" rows="8" cols="40">Return from the server.</textarea>
 </div>
 
-
-<script src="//js.pusher.com/2.2/pusher.min.js"></script>
-<script>
-    // Enable pusher logging - don't include this in production
-    Pusher.log = function(message) {
-      if (window.console && window.console.log) {
-        window.console.log(message);
-      }
-    };
-
-    var pusher = new Pusher('fb391863deb66c13d8c4');
-    var channel = pusher.subscribe('test_channel');
-    channel.bind('my_event', function(data) {
-        var string1 = String($('textarea#statusMessage').val()).concat('\n');
-        var string2 = string1.concat(String(data.message));
-        $('textarea#statusMessage').html(string2);
+<script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
+<!-- Instantiate PubNub -->
+<script type="text/javascript">
+    var PUBNUB_demo = PUBNUB.init({
+        publish_key: 'pub-c-6a3d5bbe-652b-49a2-bca1-ccb6db8bb50d',
+        subscribe_key: 'sub-c-5fa82184-f7ba-11e4-8fd2-02ee2ddab7fe'
     });
- </script>
+
+    // Subscribe to the demo_tutorial channel
+    PUBNUB_demo.subscribe({
+    channel: 'demo_tutorial',
+    message: function(m){
+        var string1 = String($('textarea#statusMessage').val()).concat('\n');
+        var string2 = string1.concat(m.code);
+        $('textarea#statusMessage').html(string2);
+        console.log(m.code)
+    }
+});
+
+</script>
 
 <script>
 
@@ -39,20 +41,12 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(function(){
     $('#sendCode').on('click', function(e){
-        e.preventDefault();
-
-        $.ajax({
-            url: $SCRIPT_ROOT + '/takeCode', //this is the submit URL
-            type: 'GET', //or POST
-            //data: $('#contact-us-form').serialize(),
-            data: { code: $('textarea#codeArea').val() },
-            success: function(data){
-                //$('textarea#statusMessage').html('Code received.');
-            },
-            error: function(data){
-                $('textarea#statusMessage').html('Opps, something is wrong with the server. Please try again.');
-            }
+        // Publish a simple message to the demo_tutorial channel
+        PUBNUB_demo.publish({
+            channel: 'demo_tutorial',
+            message: {"code":$('textarea#codeArea').val()}
         });
+
     });
 });
 </script>
