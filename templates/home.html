@@ -26,10 +26,12 @@
     PUBNUB_demo.subscribe({
     channel: 'demo_tutorial',
     message: function(m){
-        var string1 = String($('textarea#statusMessage').val()).concat('\n');
-        var string2 = string1.concat(m.code);
-        $('textarea#statusMessage').html(string2);
-        console.log(m.code)
+        if (m.sender == "bric") {
+            var string1 = String($('textarea#statusMessage').val()).concat('\n');
+            var string2 = string1.concat(m.body);
+            $('textarea#statusMessage').html(string2);
+            console.log(m.body)
+        }
     }
 });
 
@@ -44,7 +46,8 @@ $(function(){
         // Publish a simple message to the demo_tutorial channel
         PUBNUB_demo.publish({
             channel: 'demo_tutorial',
-            message: {"code":$('textarea#codeArea').val()}
+            message: {"sender": "browser",
+                      "body":$('textarea#codeArea').val()}
         });
 
     });
