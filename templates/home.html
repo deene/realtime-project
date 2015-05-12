@@ -47,6 +47,7 @@ $(function(){
         PUBNUB_demo.publish({
             channel: 'demo_tutorial',
             message: {"sender": "browser",
+                      "setSystemStatus" : "reconfiguration",
                       "body":$('textarea#codeArea').val()}
         });
 
