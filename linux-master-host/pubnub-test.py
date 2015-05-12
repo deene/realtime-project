@@ -33,7 +33,7 @@ while True:
         time.sleep(1)
     elif signal.is_set():
         print "status configuration"
-        time.sleep(10)
+        time.sleep(2)
         print("Programming Arduino...done")
         out_message = {"sender": "bric", "body": "Programming Arduino Done."}
         pubnub.publish("demo_tutorial", out_message, callback=callback(out_message), error=callback(out_message))
