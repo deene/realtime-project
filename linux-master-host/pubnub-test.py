@@ -8,7 +8,7 @@ systemStatus = "idle"
 signal = threading.Event()
 signal.clear()
 
-ser = serial.Serial('COM1', 9600)
+ser = serial.Serial('COM4', 9600)
 
 pubnub = Pubnub(publish_key="pub-c-6a3d5bbe-652b-49a2-bca1-ccb6db8bb50d", subscribe_key="sub-c-5fa82184-f7ba-11e4-8fd2-02ee2ddab7fe")
 
@@ -30,6 +30,9 @@ def callback(message):
 
 while True:
     if not signal.is_set():
+        s = ser.readline()
+        out_message = {"sender": "bric", "body": s}
+        pubnub.publish("demo_tutorial", out_message, callback=callback(out_message), error=callback(out_message))
         time.sleep(1)
     elif signal.is_set():
         print "status configuration"
