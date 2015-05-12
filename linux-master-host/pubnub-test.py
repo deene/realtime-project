@@ -26,8 +26,6 @@ def callback(message):
 
 while True:
     print "status: " + systemStatus
-    for thread in threading.enumerate():
-        print thread
 
     if systemStatus == "idle":
         time.sleep(1)
