@@ -9,9 +9,9 @@
 <body>
 
 <div class="row">
-    <textarea id="codeArea" rows="8" cols="40">This is code.</textarea>
+    <textarea id="codeArea" rows="20" cols="80">This is code.</textarea>
     <button type="button" id="sendCode">Send</button>
-    <textarea id="statusMessage" rows="8" cols="40">Return from the server.</textarea>
+    <textarea id="statusMessage" rows="20" cols="80">Return from the server.</textarea>
 </div>
 
 <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
@@ -34,11 +34,9 @@
         }
     }
 });
-
 </script>
 
 <script>
-
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(function(){

@@ -2,6 +2,7 @@ from Pubnub import Pubnub
 import time
 import serial
 import threading
+import subprocess
 
 systemStatus = "idle"
 signal = threading.Event()
@@ -25,17 +26,17 @@ def _error(message):
 pubnub.subscribe(channels="demo_tutorial", callback=_callback, error=_error)
 
 def callback(message):
-    print(message)
+    print("callback place holder")
 
 while True:
     if not signal.is_set():
-        print "status idle"
         time.sleep(1)
     elif signal.is_set():
         print "status configuration"
         time.sleep(2)
+        output = subprocess.check_output('ipconfig')
         print("Programming Arduino...done")
-        out_message = {"sender": "bric", "body": "Programming Arduino Done."}
+        out_message = {"sender": "bric", "body": output}
         pubnub.publish("demo_tutorial", out_message, callback=callback(out_message), error=callback(out_message))
-        systemStatus = "idle"
+        print "entering idle..."
         signal.clear()
