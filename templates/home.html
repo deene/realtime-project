@@ -10,7 +10,9 @@
 
 <div class="row">
     <textarea id="codeArea" rows="20" cols="80">This is code.</textarea>
-    <button type="button" id="sendCode">Send</button>
+    <button type="button" id="compile">Compile</button>
+    <button type="button" id="run">Run</button>
+    <button type="button" id="idle">Idle</button>
     <textarea id="statusMessage" rows="20" cols="80">Return from the server.</textarea>
 </div>
 
@@ -40,12 +42,35 @@
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(function(){
-    $('#sendCode').on('click', function(e){
+    $('#compile').on('click', function(e){
         // Publish a simple message to the demo_tutorial channel
         PUBNUB_demo.publish({
             channel: 'demo_tutorial',
             message: {"sender": "browser",
-                      "setSystemStatus" : "reconfiguration",
+                      "receiver" : "bric master",
+                      "cmd" : "compile",
+                      "body":$('textarea#codeArea').val()}
+        });
+
+    });
+    $('#run').on('click', function(e){
+        // Publish a simple message to the demo_tutorial channel
+        PUBNUB_demo.publish({
+            channel: 'demo_tutorial',
+            message: {"sender": "browser",
+                      "receiver" : "bric master",
+                      "cmd" : "run",
+                      "body":$('textarea#codeArea').val()}
+        });
+
+    });
+    $('#idle').on('click', function(e){
+        // Publish a simple message to the demo_tutorial channel
+        PUBNUB_demo.publish({
+            channel: 'demo_tutorial',
+            message: {"sender": "browser",
+                      "receiver" : "bric master",
+                      "cmd" : "idle",
                       "body":$('textarea#codeArea').val()}
         });
 
