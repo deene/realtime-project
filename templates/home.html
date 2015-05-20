@@ -28,7 +28,7 @@
     PUBNUB_demo.subscribe({
     channel: 'demo_tutorial',
     message: function(m){
-        if (m.sender == "bric") {
+        if (m.sender == "bric master") {
             var string1 = String($('textarea#statusMessage').val()).concat('\n');
             var string2 = string1.concat(m.body);
             $('textarea#statusMessage').html(string2);
