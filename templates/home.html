@@ -46,7 +46,7 @@
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/c_cpp");
 </script>
 
 <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
@@ -73,27 +73,32 @@
 
 <script>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+var editor = ace.edit("editor");
 
 $(function(){
     $('#compile').on('click', function(e){
         // Publish a simple message to the demo_tutorial channel
+        console.log(editor.getValue())
         PUBNUB_demo.publish({
             channel: 'demo_tutorial',
             message: {"sender": "browser",
                       "receiver" : "bric master",
                       "cmd" : "compile",
-                      "body":$('textarea#codeArea').val()}
+                      "body":$('textarea#codeArea').val(),
+                      "code":editor.getValue()}
         });
 
     });
     $('#run').on('click', function(e){
         // Publish a simple message to the demo_tutorial channel
+        console.log(editor.getValue())
         PUBNUB_demo.publish({
             channel: 'demo_tutorial',
             message: {"sender": "browser",
                       "receiver" : "bric master",
                       "cmd" : "run",
-                      "body":$('textarea#codeArea').val()}
+                      "body":$('textarea#codeArea').val(),
+                      "code":editor.getValue()}
         });
 
     });
